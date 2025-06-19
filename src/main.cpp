@@ -16,7 +16,7 @@
   Find the full MPU6050 library documentation here:
   https://github.com/ElectronicCats/mpu6050/wiki
 */
-
+#define DEBUG
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 
@@ -48,6 +48,7 @@ float euler[3];         // [psi, theta, phi]    Euler angle container
 float ypr[3];           // [yaw, pitch, roll]   Yaw/Pitch/Roll container and gravity vector
 
 void setup() {
+  
   //#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     Wire.begin();
     Wire.setClock(400000); // 400kHz I2C clock. Comment on this line if having compilation difficulties
@@ -70,6 +71,7 @@ void setup() {
   /* Initializate and configure the DMP*/
   Serial.println(F("Initializing DMP..."));
   devStatus = mpu.dmpInitialize();
+  Serial.println(devStatus);
 
   /* Supply your gyro offsets here, scaled for min sensitivity */
   mpu.setXGyroOffset(0);
@@ -80,7 +82,7 @@ void setup() {
   mpu.setZAccelOffset(0);
 
   /* Making sure it worked (returns 0 if so) */ 
-  if (devStatus == 0) {
+  //if (devStatus == 0) {
     mpu.CalibrateAccel(6);  // Calibration Time: generate offsets and calibrate our MPU6050
     mpu.CalibrateGyro(6);
     Serial.println("These are the Active offsets: ");
@@ -94,7 +96,7 @@ void setup() {
     Serial.println(F("DMP ready! Waiting for first interrupt..."));
     DMPReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize(); //Get expected DMP packet size for later comparison
-  }
+  //}
 }
 
 void loop() {
